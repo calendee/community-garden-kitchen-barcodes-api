@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "cgk-barcodes-api",
+  "version": "1.0.0",
+  "description": "A template for kick starting a Cloudflare Workers project",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write '**/*.{js,ts,tsx,css,json,md}'"
+  },
+  "author": "Justin Noel <justin.noel@calendee.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  }
+}
