@@ -1,0 +1,3 @@
+- [ ] Convert to TypeScript
+- [ ] Add logging to LogFlare
+- [ ] Add Sentry integration

@@ -1,7 +1,7 @@
 name = "cgk-barcodes-api"
 type = "javascript"
 
-account_id = ""
+account_id = "8199f196c5cb78e1df1b4f136e9f3bf4"
 workers_dev = true
 route = ""
 zone_id = ""
