@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { json as IttyJson } from "itty-router-extras";
 
-export async function getBarcodeById(request) {
+function validateBarCode(request) {
 	const Code = z
 		.string()
 		.min(12, { message: "Please enter a 12 or 13 digit UPC code" })
@@ -11,19 +11,14 @@ export async function getBarcodeById(request) {
 	const validationResult = Code.safeParse(barCode);
 
 	if (validationResult.success) {
-		return IttyJson(
-			{
-				status: "success",
-				data: { barCode, info: "blah blah blah" },
-			},
-			{ headers: request.corsHeaders },
-		);
+		return { valid: true };
 	}
 
 	const errors = validationResult.error.issues.reduce((accumulator, issue) => {
 		return { ...accumulator, [issue.path[0]]: issue.message };
 	}, {});
-	return new Response(
+
+	const response = new Response(
 		JSON.stringify({
 			status: "failed",
 			errors: errors,
@@ -35,5 +30,24 @@ export async function getBarcodeById(request) {
 			},
 			status: 400,
 		},
+	);
+
+	return { valid: false, response };
+}
+
+export async function getBarcodeById(request) {
+	const barCode = request.params.id;
+	const validation = validateBarCode(request);
+
+	if (!validation.valid) {
+		return validation.response;
+	}
+
+	return IttyJson(
+		{
+			status: "success",
+			data: { barCode, info: "blah blah blah" },
+		},
+		{ headers: request.corsHeaders },
 	);
 }
