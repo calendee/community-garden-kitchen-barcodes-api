@@ -58,7 +58,7 @@ const errorHandler = () => {
 addEventListener("fetch", event =>
 	event.respondWith(
 		router.handle(event.request).catch(error => {
-			console.log("Error!");
+			console.log("fetch error:");
 			console.log(error);
 			return errorHandler(event, error);
 		}),

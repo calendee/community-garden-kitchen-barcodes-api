@@ -7,6 +7,7 @@ To develop locally, install the project from Github.
 Create a `.env.miniflare` file. It will be used to store environment variables during development. It should contain the following:
 
 ```
+BARCODE_API_URL=https://api.barcodelookup.com/v3/products/
 # Get the API key from the https://account.barcodelookup.com site
 BARCODE_API_KEY=???
 # Use the local domains used for the CGK Barcodes front end while developing. Something like:

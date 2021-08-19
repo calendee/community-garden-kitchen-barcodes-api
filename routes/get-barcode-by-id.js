@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { json as IttyJson } from "itty-router-extras";
+import { fetchJson } from "../utils";
 
 function validateBarCode(request) {
 	const Code = z
@@ -35,6 +36,14 @@ function validateBarCode(request) {
 	return { valid: false, response };
 }
 
+async function fetchBarCodeData(barCode) {
+	const { data, error } = await fetchJson(
+		`${BARCODE_API_URL}?barcode=${barCode}&key=${BARCODE_API_KEY}`,
+	);
+
+	return { barCodeInfo: data, error };
+}
+
 export async function getBarcodeById(request) {
 	const barCode = request.params.id;
 	const validation = validateBarCode(request);
@@ -43,10 +52,12 @@ export async function getBarcodeById(request) {
 		return validation.response;
 	}
 
+	const { barCodeInfo, error } = await fetchBarCodeData(barCode);
+
 	return IttyJson(
 		{
-			status: "success",
-			data: { barCode, info: "blah blah blah" },
+			status: error ? "fail" : "success",
+			data: { barCode, info: barCodeInfo, error },
 		},
 		{ headers: request.corsHeaders },
 	);
