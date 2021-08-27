@@ -1,4 +1,4 @@
-// Based on https://www.maxpou.fr/async-await-without-try-catch and https://github.com/JFDI-Consulting/attempt and https://blog.usegravity.app/this-simple-node-js-trick-will-save-you-100s-of-lines-of-code/
+// From https://gist.github.com/calendee/b934b15d36e43782df3c2271f32801d8
 
 export function asyncWrapper<T>(somePromise: Promise<T>) {
 	return somePromise
@@ -9,7 +9,6 @@ export function asyncWrapper<T>(somePromise: Promise<T>) {
 		});
 }
 
-// Based on https://www.youtube.com/watch?v=aIboXjxo-w8
 export async function fetchJson(
 	input: RequestInfo,
 	init?: RequestInit | undefined,

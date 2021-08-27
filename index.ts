@@ -20,11 +20,11 @@ const withRequestDetails = request => {
 
 const withCorsHeaders = request => {
 	const referer = request.headers.get("Referer");
-	const url = new URL(referer);
+	const url = referer ? new URL(referer) : null;
 
 	request.corsHeaders = {
-		"Access-Control-Allow-Origin": ORIGINATING_DOMAINS.includes(url)
-			? url.origin
+		"Access-Control-Allow-Origin": ORIGINATING_DOMAINS.includes(url?.origin)
+			? url?.origin
 			: ORIGINATING_DOMAINS.split("||")[0],
 		"Access-Control-Allow-Methods": "GET, POST",
 		"Access-Control-Max-Age": "1728000",
@@ -41,7 +41,10 @@ const router = Router();
 router
 	.all("*", withRequestDetails)
 	.options("*", withCorsHeaders)
+	.get("*", withCorsHeaders)
 	.options("*", request => {
+		// TODO: Fix typings
+		// @ts-ignore
 		return new Response("", { headers: request.corsHeaders });
 	})
 	.get("/api/barcode/:id", getBarcodeById)
@@ -56,10 +59,16 @@ const errorHandler = () => {
 };
 
 addEventListener("fetch", event =>
+	// TODO: Fix typings
+	// @ts-ignore
 	event.respondWith(
+		// TODO: Fix typings
+		// @ts-ignore
 		router.handle(event.request).catch(error => {
 			console.log("fetch error:");
 			console.log(error);
+			// TODO: Fix typings
+			// @ts-ignore
 			return errorHandler(event, error);
 		}),
 	),
