@@ -22,6 +22,7 @@ const withCorsHeaders = request => {
 	const referer = request.headers.get("Referer");
 	const url = referer ? new URL(referer) : null;
 
+	// TODO: Improve this with a regex
 	request.corsHeaders = {
 		"Access-Control-Allow-Origin": ORIGINATING_DOMAINS.includes(url?.origin)
 			? url?.origin
@@ -48,8 +49,13 @@ router
 		return new Response("", { headers: request.corsHeaders });
 	})
 	.get("/api/barcode/:id", getBarcodeById)
-	.all("*", () => {
-		return new Response("Not Found.", { status: 404 });
+	.all("*", request => {
+		return new Response("Not Found.", {
+			status: 404,
+			// TODO: Fix typings
+			// @ts-ignore
+			headers: request.corsHeaders,
+		});
 	});
 
 const errorHandler = () => {
