@@ -55,22 +55,17 @@ async function fetchBarcodeData(barcode) {
 	const { data, error } = await fetchJson(
 		`${BARCODE_API_URL}?barcode=${barcode}&key=${BARCODE_API_KEY}`,
 	);
-	console.log("data");
-	console.log(data);
 
 	if (!data?.products[0]) {
 		return { productInfo: null, error: "Failed to fetch product info." };
 	}
 
 	const productInfo = formatProductInfo(data);
-	console.log("formatted productInfo");
-	console.log(productInfo);
 
 	return { productInfo, error };
 }
 
 export async function getBarcodeById(request) {
-	console.log("Got a request!");
 	const barcode = request.params.id;
 	const validation = validateBarcode(request);
 
@@ -83,7 +78,14 @@ export async function getBarcodeById(request) {
 	return IttyJson(
 		{
 			status: error ? "fail" : "success",
-			data: { barcode, info: productInfo, error },
+			barcode,
+			info: productInfo || {
+				title: "",
+				brand: "",
+				manufacturer: "",
+				weight: "",
+			},
+			error,
 		},
 		{ headers: request.corsHeaders },
 	);
