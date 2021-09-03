@@ -87,6 +87,12 @@ export async function getBarcodeById(request) {
 			},
 			error,
 		},
-		{ headers: request.corsHeaders },
+		{
+			headers: {
+				...request.corsHeaders,
+				// 1 week
+				"Cache-Control": "max-age=604800",
+			},
+		},
 	);
 }

@@ -28,7 +28,7 @@ const withCorsHeaders = request => {
 			? url?.origin
 			: ORIGINATING_DOMAINS.split("||")[0],
 		"Access-Control-Allow-Methods": "GET, POST",
-		"Access-Control-Max-Age": "1728000",
+		"Access-Control-Max-Age": "604800",
 		"Access-Control-Allow-Headers": [
 			"Origin",
 			"X-Requested-With",
