@@ -27,13 +27,17 @@ function formatProductInfo(productInfo) {
 	};
 }
 
+function trimBarcode(barcode) {
+	return barcode.replace(/%20/g, "").trim();
+}
+
 function validateBarcode(request) {
 	const Code = z
 		.string()
 		.min(12, { message: "Please enter a 12 or 13 digit UPC code" })
 		.max(13, { message: "Please enter a 12 or 13 digit UPC code" });
 
-	const barcode = request.params.id;
+	const barcode = trimBarcode(request?.params?.id ?? "");
 	const validationResult = Code.safeParse(barcode);
 
 	if (validationResult.success) {
@@ -101,7 +105,7 @@ async function fetchBarcodeData(barcode) {
 }
 
 export async function getBarcodeById(request) {
-	const barcode = request.params.id;
+	const barcode = trimBarcode(request?.params?.id ?? "");
 	const validation = validateBarcode(request);
 
 	if (!validation.valid) {
