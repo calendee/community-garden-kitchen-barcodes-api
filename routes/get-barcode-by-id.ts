@@ -2,6 +2,16 @@ import { z } from "zod";
 import { json as IttyJson } from "itty-router-extras";
 import { fetchJson } from "../utils";
 
+const ALLOWED_BARCODES = [
+	"039978025784",
+	"085239098790",
+	"021130520015",
+	"840379101393",
+	"014100096573",
+	"085239047354",
+	"076808516135",
+];
+
 function formatProductInfo(productInfo) {
 	const regex = /(\d+\s?(oz|lbs?)|\d+\s?(ounces?|pounds?))/i;
 	const { manufacturer, title, brand, mpn, weight } =
@@ -51,7 +61,32 @@ function validateBarcode(request) {
 	return { valid: false, response };
 }
 
+function fetchFakedBarcodeData(barcode) {
+	const data = {
+		products: [
+			{
+				barcode_number: `${barcode}`,
+				barcode_formats: `UPC-A ${barcode}, EAN-13 ${barcode}`,
+				title: "Explosive Tennis Balls",
+				manufacturer: "Acme Corporation",
+				brand: "Acme Sports",
+				weight: "12 oz",
+				description: "Throw & Run!",
+				last_update: "2021-06-22 06:41:49",
+			},
+		],
+	};
+
+	const productInfo = formatProductInfo(data);
+
+	return { productInfo, error: null };
+}
+
 async function fetchBarcodeData(barcode) {
+	if (!ALLOWED_BARCODES.includes(barcode)) {
+		return fetchFakedBarcodeData(barcode);
+	}
+
 	const { data, error } = await fetchJson(
 		`${BARCODE_API_URL}?barcode=${barcode}&key=${BARCODE_API_KEY}`,
 	);
